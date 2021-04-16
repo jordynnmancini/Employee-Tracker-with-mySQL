@@ -1,0 +1,25 @@
+{
+  "name": "Employee-Tracker-with-mySQL",
+  "version": "1.0.0",
+  "description": "## Description The goal of this assigment was to create a Content Management System that a user can access via a command-line application that allows them to manage their company's employees using `node.js`, `inquirer`, and `MySQL`.  (insert gif here)",
+  "main": "employeeManagement.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jordynnmancini/Employee-Tracker-with-mySQL.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jordynnmancini/Employee-Tracker-with-mySQL/issues"
+  },
+  "homepage": "https://github.com/jordynnmancini/Employee-Tracker-with-mySQL#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.0.0",
+    "mysql": "^2.18.1"
+  }
+}
