@@ -71,31 +71,20 @@ const viewAllEmployees = () => {
 
     connection.query(query, (err, res) => {
         if (err) throw err;
-        console.log(`${res.length} matches found!`);
-        // res.forEach(({}) => {
-        //     console.table([
-        //         {
-        //             id: employee.id,
-        //             first_name: employee.first_name,
-        //             last_name: employee.last_name,
-        //             title: role.title,
-        //             department: department.name,
-        //             salary: role.salary,
-        //             manager: employee.manager_ID,
-        //         }
-        //     ]);
+        console.log(`${res.length} employees found`);
+
+        res.forEach(() => {
             // console.table([
             //     {
-            //         id: 'test',
-            //         first_name: 'test',
-            //         last_name: 'test',
-            //         title: 'test',
-            //         department: 'test',
-            //         salary: 'test',
-            //         manager: 'test',
+            //         id: employee.id,
+            //         first_name: employee.first_name,
+            //         last_name: employee.last_name,
+            //         title: role.title,
+            //         department: department.name,
+            //         salary: role.salary,
+            //         manager: employee.manager_ID,
             //     }
             // ]);
-            // console.log('worked'); 
-    //     })
+        }); 
     });
 }; 
