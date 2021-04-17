@@ -7,7 +7,7 @@ const connection = mysql.createConnection({
     port: 3306,
     user: 'root',
 
-    password: '',
+    password: 'kaiDawg$17$',
     database: 'employeesDB',
 });
 
@@ -73,9 +73,9 @@ const viewAllEmployees = () => {
         if (err) throw err;
         console.log(`${res.length} employees found`);
 
-        console.table(res); 
+        console.table(res);
 
-        initialize(); 
+        initialize();
     });
 };
 
@@ -84,54 +84,56 @@ const viewEmployeesByDept = () => {
 
     connection.query(query, (err, res) => {
         if (err) throw err;
-        console.table(res); 
-       
-        initialize(); 
+        console.table(res);
+
+        initialize();
     })
 }
 
 const addEmployee = () => {
     inquirer
-        .prompt({
-            type: 'input',
-            name: 'newFirst',
-            message: 'What is the employees first name?',
-        },
-        {
-            type: 'input',
-            name: 'newLast',
-            message: 'What is this employees last name?',
-        },
-        {
-            type: 'list',
-            name: 'newRole',
-            message: 'What is this employees role?',
-            choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead'],
-        })
+        .prompt([
+            {
+                type: 'input',
+                name: 'newFirst',
+                message: 'What is the employees first name?',
+            },
+            {
+                type: 'input',
+                name: 'newLast',
+                message: 'What is this employees last name?',
+            },
+            {
+                type: 'list',
+                name: 'newRole',
+                message: 'What is this employees role?',
+                choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead'],
+            }
+        ])
         .then((answers) => {
             // query to get the roles/role ID 
-            /* 
-                result = [
-                    { id: 1, title: 'Sales Lead },
-                    { id: 2, title: 'Salesperson },
+            const query1 = 'SELECT * from role';
 
-                ]
-            
-            */
+            connection.query(query1, (err, res) => {
+                if (err) throw err;
+                const result = res;
 
-                // answer = Sales Lead
-            // const role =  result.find(role => role.title === answers.newRole)
-            // role = { id: 1, title: 'Sales Lead }
-           const query = 'INSERT INTO employee SET ?';
-           connection.query(query, 
-            {
-                first_name: answers.newFirst, 
-                last_name: answers.newLast,
-                role_id: role.id,
-            },
-            (err, res) => {
-                if (err) throw (err);
-                console.log(`${res.affectedRows} employee(s) inserted! \n`)
-            })
+                const role = result.find(role => role.title === answers.newRole);
+
+                const query2 = 'INSERT INTO employee SET ?';
+
+                connection.query(query2,
+                    {
+                        first_name: answers.newFirst,
+                        last_name: answers.newLast,
+                        role_id: role.id,
+                    },
+                    (err, res) => {
+                        if (err) throw (err);
+                        console.log(`${res.affectedRows} employee(s) inserted! \n`);
+
+                        initialize();
+                    })
+            });
         })
 };
