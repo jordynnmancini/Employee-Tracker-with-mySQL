@@ -7,7 +7,7 @@ const connection = mysql.createConnection({
     port: 3306,
     user: 'root',
 
-    password: '',
+    password: 'kaiDawg$17$',
     database: 'employeesDB',
 });
 
@@ -67,40 +67,26 @@ const initialize = () => {
 };
 
 const viewAllEmployees = () => {
-    const query = 'SELECT * FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id';
+    const query = 'SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name, employee.manager_ID FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id';
 
     connection.query(query, (err, res) => {
         if (err) throw err;
         console.log(`${res.length} employees found`);
 
         console.table(res); 
-        // res.forEach(() => {
-        //     console.table([
-        //         {
-        //             id: employee.id,
-        //             first_name: employee.first_name,
-        //             last_name: employee.last_name,
-        //             title: role.title,
-        //             department: department.name,
-        //             salary: role.salary,
-        //             manager: employee.manager_ID,
-        //         }
-        //     ]);
-        // });
+
+        initialize(); 
     });
 };
 
 const viewEmployeesByDept = () => {
-    const query = 'SELECT * from department LEFT JOIN role ON department.id = role.department_id LEFT JOIN employee ON role.id = employee.role_id';
+    const query = 'SELECT department.name, employee.first_name, employee.last_name, employee.id FROM department LEFT JOIN role ON department.id = role.department_id LEFT JOIN employee ON role.id = employee.role_id';
 
     connection.query(query, (err, res) => {
         if (err) throw err;
-        console.table([
-            // {
-            //     Department: department.name,
-            //     Employees: employee.first_name, 
-            // }
-        ])
+        console.table(res); 
+       
+        initialize(); 
     })
 }
 
@@ -123,12 +109,25 @@ const addEmployee = () => {
             choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead'],
         })
         .then((answers) => {
+            // query to get the roles/role ID 
+            /* 
+                result = [
+                    { id: 1, title: 'Sales Lead },
+                    { id: 2, title: 'Salesperson },
+
+                ]
+            
+            */
+
+                // answer = Sales Lead
+            // const role =  result.find(role => role.title === answers.newRole)
+            // role = { id: 1, title: 'Sales Lead }
            const query = 'INSERT INTO employee SET ?';
            connection.query(query, 
             {
-                first_name: answers.newFirst,
+                first_name: answers.newFirst, 
                 last_name: answers.newLast,
-                // role_id: answers.newRole,
+                role_id: role.id,
             },
             (err, res) => {
                 if (err) throw (err);
