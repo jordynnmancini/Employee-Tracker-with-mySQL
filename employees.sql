@@ -29,12 +29,12 @@ CREATE TABLE employee (
 );
 
 
-INSERT INTO department(id, name)
+INSERT INTO department(name)
 VALUES
-(001, "Sales"),
-(002, "Engineering"),
-(003, "Finance"),
-(004, "Legal");
+("Sales"),
+("Engineering"),
+("Finance"),
+("Legal");
 
 INSERT INTO role (title, salary, department_id)
 VALUES ("Sales Lead", 70000.00, 001),

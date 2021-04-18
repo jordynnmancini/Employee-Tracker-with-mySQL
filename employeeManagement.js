@@ -7,7 +7,7 @@ const connection = mysql.createConnection({
     port: 3306,
     user: 'root',
 
-    password: 'kaiDawg$17$',
+    password: '',
     database: 'employeesDB',
 });
 
@@ -293,7 +293,7 @@ const addNewRole = () => {
             .then((answers) => {
                 connection.query('SELECT * FROM department', (err, res) => {
                     if (err) throw err;
-                    const department = res.find(department => department.title === answers.department);
+                    const department = res.find(department => department.name === answers.department);
 
                     connection.query('INSERT INTO role SET ?',
                     {
