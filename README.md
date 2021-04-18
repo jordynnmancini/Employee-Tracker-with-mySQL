@@ -2,7 +2,8 @@
 
 ## Description
 The goal of this assigment was to create a Content Management System that a user can access via a command-line application that allows them to manage their company's employees using `node.js`, `inquirer`, and `MySQL`. 
-(insert gif here)
+
+![demo](./assets/demo.gif)
 
 ## Table of Contents
 - [Installation](#installation)

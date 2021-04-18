@@ -243,7 +243,7 @@ const updateEmployeeRole = () => {
 };
 
 const viewAllRoles = () => {
-    connection.query('SELECT * FROM role', (err, res) => {
+    connection.query('SELECT * FROM role LEFT JOIN department ON role.department_id = department.id', (err, res) => {
         if (err) throw err;
         console.log(`${res.length} roles found`);
 
