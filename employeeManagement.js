@@ -23,7 +23,7 @@ const initialize = () => {
             type: 'list',
             name: 'action',
             message: 'What would you like to do?',
-            choices: ['View All Employees', 'View All Employees by Department', 'Add Employee', 'Remove Employee', 'Update Employee Role', 'Update Employee Manager', 'View All Roles'],
+            choices: ['View All Employees', 'View All Employees by Department', 'Add Employee', 'Remove Employee', 'Update Employee Role', 'View All Roles', 'View All Departments'],
         })
         .then((answer) => {
             switch (answer.action) {
@@ -47,12 +47,12 @@ const initialize = () => {
                     updateEmployeeRole();
                     break;
 
-                case 'Update Employee Manager':
-                    updateEmployeeManager();
-                    break;
-
                 case 'View All Roles':
                     viewAllRoles();
+                    break;
+                
+                case 'View All Departments':
+                    viewAllDepartments();
                     break;
 
                 default:
@@ -217,5 +217,27 @@ const updateEmployeeRole = () => {
 
                 });
             });
+    });
+};
+
+const viewAllRoles = () => {
+    connection.query('SELECT * FROM role', (err, res) => {
+        if (err) throw err;
+        console.log(`${res.length} roles found`);
+
+        console.table(res);
+
+        initialize();
+    });
+};
+
+const viewAllDepartments = () => {
+    connection.query('SELECT * FROM department', (err, res) => {
+        if (err) throw err;
+        console.log(`${res.length} roles found`);
+
+        console.table(res);
+
+        initialize();
     });
 };
