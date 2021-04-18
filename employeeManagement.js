@@ -23,7 +23,7 @@ const initialize = () => {
             type: 'list',
             name: 'action',
             message: 'What would you like to do?',
-            choices: ['View All Employees', 'View All Employees by Department', 'View All Employees by Manager', 'Add Employee', 'Remove Employee', 'Update Employee Role', 'Update Employee Manager', 'View All Roles'],
+            choices: ['View All Employees', 'View All Employees by Department', 'Add Employee', 'Remove Employee', 'Update Employee Role', 'Update Employee Manager', 'View All Roles'],
         })
         .then((answer) => {
             switch (answer.action) {
@@ -33,10 +33,6 @@ const initialize = () => {
 
                 case 'View All Employees by Department':
                     viewEmployeesByDept();
-                    break;
-
-                case 'View All Employees by Manager':
-                    viewEmployeesByManager();
                     break;
 
                 case 'Add Employee':
@@ -111,18 +107,11 @@ const addEmployee = () => {
             }
         ])
         .then((answers) => {
-            // query to get the roles/role ID 
-            const query1 = 'SELECT * from role';
-
-            connection.query(query1, (err, res) => {
+            connection.query('SELECT * from role', (err, res) => {
                 if (err) throw err;
-                const result = res;
+                const role = res.find(role => role.title === answers.newRole);
 
-                const role = result.find(role => role.title === answers.newRole);
-
-                const query2 = 'INSERT INTO employee SET ?';
-
-                connection.query(query2,
+                connection.query('INSERT INTO employee SET ?',
                     {
                         first_name: answers.newFirst,
                         last_name: answers.newLast,
@@ -136,4 +125,97 @@ const addEmployee = () => {
                     })
             });
         })
+};
+
+const removeEmployee = () => {
+    const query = 'SELECT CONCAT(employee.first_name, " ", employee.last_name) AS fullName FROM employee';
+
+    connection.query(query, (err, res) => {
+        let choices = res.map(function (res) {
+            return res['fullName'];
+        });
+
+        inquirer
+            .prompt({
+                type: 'list',
+                name: 'delete',
+                message: 'What employee would you like to remove?',
+                choices: choices,
+            })
+            .then((answers) => {
+                connection.query('SELECT id, first_name, last_name from employee', (err, res) => {
+                    if (err) throw err;
+                    let name = answers.delete.split(' ');
+
+                    const employee = res.find(employee => employee.first_name === name[0] && employee.last_name === name[1]);
+
+                    connection.query('DELETE FROM employee WHERE ?',
+                        {
+                            id: employee.id,
+                        },
+                        (err, res) => {
+                            if (err) throw err;
+                            console.log(`${res.affectedRows} employee(s) removed! \n`);
+
+                            initialize();
+                        });
+                });
+            });
+    });
+
+};
+
+const updateEmployeeRole = () => {
+    const query = 'SELECT CONCAT(employee.first_name, " ", employee.last_name) AS fullName FROM employee';
+
+    connection.query(query, (err, res) => {
+        let choices = res.map(function (res) {
+            return res['fullName'];
+        });
+
+        inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'employee',
+                    message: 'What employee would you like to update?',
+                    choices: choices,
+                },
+                {
+                    type: 'list',
+                    name: 'role',
+                    message: 'What do you want to change their role to?',
+                    choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead']
+                },
+            ])
+            .then((answers) => {
+                connection.query('SELECT * FROM role', (err, res) => {
+                    if (err) throw err;
+                    const role = res.find(role => role.title === answers.role);
+
+                    connection.query('SELECT * FROM employee', (err, res) => {
+                        if (err) throw err;
+                        let name = answers.employee.split(' ');
+                        const employee = res.find(employee => employee.first_name === name[0] && employee.last_name === name[1]);
+
+                        connection.query('UPDATE employee SET ? WHERE ?',
+                            [
+                                {
+                                    role_id: role.id,
+                                },
+                                {
+                                    id: employee.id,
+                                },
+                            ],
+                            (err, res) => {
+                                if (err) throw err;
+                                console.log(`${res.affectedRows} employee(s) updated! \n`);
+
+                                initialize();
+                            });
+                    });
+
+                });
+            });
+    });
 };
